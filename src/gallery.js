@@ -62,6 +62,7 @@ export default class Gallery extends Component {
     const scrollbarIsHidden = window.innerWidth === document.body.clientWidth;
 
     if (scrollbarIsHidden) {
+      // ？？？
       const totalHeight = images.reduce((a, b) => { return a + b.height }, 0);
       if (totalHeight > window.innerHeight - this.myRef.current.offsetTop) {
         return true;
@@ -70,6 +71,7 @@ export default class Gallery extends Component {
   }
 
   renderImages() {
+    // debugger;
     const { images, columnWidth } = this.props;
     
     let containerWidth = this.myRef.current.clientWidth;
@@ -96,17 +98,25 @@ export default class Gallery extends Component {
       ]);
       if (currentRowAspectRatio > this.rowTotalAspectRatio || images[i + 1] === undefined) {
         const rowAspectRatio = currentRowAspectRatio > this.rowTotalAspectRatio ? currentRowAspectRatio : this.rowTotalAspectRatio;
+        let maxHeight = 0;
+
+        for (let j = 0; j < currentRow.length; j++) {
+          const aspectRatio = currentRow[j][1];
+          const workingWidth = containerWidth - (10 * currentRow.length);
+          const width = (aspectRatio * workingWidth / rowAspectRatio);
+          const tempheight = width / aspectRatio;
+          maxHeight = Math.max(tempheight, maxHeight);
+        }
 
         for (let j = 0; j < currentRow.length; j++) {
           const Element = currentRow[j][0];
           const aspectRatio = currentRow[j][1];
           const workingWidth = containerWidth - (10 * currentRow.length);
           const width = (aspectRatio * workingWidth / rowAspectRatio);
-          const height = width / aspectRatio;
           result.push(
             React.cloneElement(
               Element, 
-              { style: { width, height } }
+              { style: { width, height: maxHeight } }
             )
           );
         }
@@ -140,7 +150,7 @@ Gallery.propTypes = {
 };
 
 Gallery.defaultProps = {
-  columnWidth: 250,
+  columnWidth: Math.floor(document.body.clientWidth / 3),
   imageLoadingColor: '#f3f3f3'
 };
 

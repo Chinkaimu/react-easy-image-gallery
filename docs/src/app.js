@@ -23,12 +23,33 @@ export default class App extends Component {
     fetch('https://pixabay.com/api/?key=11039936-6e77e51408504e6821e3c708b&q=yosemite&image_type=photo&per_page=22')
       .then(res => res.json())
       .then(result => {
+        const pics = result.hits.map(image => ({
+          src: image.webformatURL,
+          width: image.webformatWidth,
+          height: image.webformatHeight
+        }));
+        pics.push({
+          src: 'https://yimi-content.azurewebsites.net/TestImages/pet.jpg',
+          width: 500,
+          height: 500
+        });
+        pics.push({
+          src: 'https://yimi-content.azurewebsites.net/TestImages/duck-small.jpg',
+          width: 300,
+          height: 400
+        });
+        pics.push({
+          src: 'https://yimi-content.azurewebsites.net/TestImages/cat-small.jpg',
+          width: 225,
+          height: 400
+        });      
+        pics.push({
+          src: 'https://yimi-content.azurewebsites.net/TestImages/blob.jpg',
+          width: 659,
+          height: 519
+        });
         this.setState({
-          images: result.hits.map(image => ({
-            src: image.webformatURL,
-            width: image.webformatWidth,
-            height: image.webformatHeight
-          }))
+          images: pics,
         });
       });
   }
